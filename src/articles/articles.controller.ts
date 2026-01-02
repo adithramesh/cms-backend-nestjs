@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Patch,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -27,12 +27,24 @@ export class ArticlesController {
   }
 
   @Get()
-  async findAll() {
+  async findAllArticle() {
     return await this.articlesService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(':id')
+  @Get('me')
+  async getMyArticles(@Req() req) {
+    console.log(req.user.userId);
+    return await this.articlesService.findMyArticles(req.user.userId);
+  }
+
+  @Get(':id')
+  async findArticleById(@Param('id') id: string) {
+    return await this.articlesService.findOne(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
   update(@Param('id') id: string, @Body() body, @Req() req) {
     return this.articlesService.update(id, req.user.userId, body);
   }

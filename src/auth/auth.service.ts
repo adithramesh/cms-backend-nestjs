@@ -24,7 +24,7 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    return this.generateToken(user._id.toString());
+    return this.generateToken(user._id.toString(), user.name);
   }
 
   async login(email: string, password: string) {
@@ -36,12 +36,12 @@ export class AuthService {
     if (!isValid) {
       throw new BadRequestException('Invalid credentials');
     }
-    return this.generateToken(user._id.toString());
+    return this.generateToken(user._id.toString(), user.name);
   }
 
-  private generateToken(userId: string) {
+  private generateToken(userId: string, username: string) {
     return {
-      access_token: this.jwtService.sign({ sub: userId }),
+      access_token: this.jwtService.sign({ sub: userId, username }),
     };
   }
 }

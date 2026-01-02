@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Article } from './articles.schema';
 
 @Injectable()
@@ -18,6 +18,13 @@ export class ArticlesRepository {
     return this.articleModel.findById(id).exec();
   }
 
+  async findByIdPopulated(id: string) {
+    return this.articleModel
+      .findById(id)
+      .populate('author', 'name email')
+      .exec();
+  }
+
   async updateById(id: string, data: Partial<Article>) {
     return this.articleModel.findByIdAndUpdate(id, data, { new: true }).exec();
   }
@@ -29,6 +36,13 @@ export class ArticlesRepository {
   async findAll() {
     return this.articleModel
       .find()
+      .populate('author', 'name email -_id')
+      .exec();
+  }
+
+  async findByAuthor(userId: string) {
+    return await this.articleModel
+      .find({ author: new Types.ObjectId(userId) })
       .populate('author', 'name email -_id')
       .exec();
   }
