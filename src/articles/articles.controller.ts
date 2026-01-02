@@ -37,7 +37,7 @@ export class ArticlesController {
     console.log(req.user.userId);
     return await this.articlesService.findMyArticles(req.user.userId);
   }
-
+  
   @Get(':id')
   async findArticleById(@Param('id') id: string) {
     return await this.articlesService.findOne(id);
