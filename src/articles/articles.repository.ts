@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Article } from './articles.schema';
+import { IArticlesRepository } from './articles.repository.interface';
 
 @Injectable()
-export class ArticlesRepository {
+export class ArticlesRepository implements IArticlesRepository {
   constructor(
     @InjectModel(Article.name)
     private readonly articleModel: Model<Article>,
