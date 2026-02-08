@@ -1,15 +1,19 @@
 import {
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ArticlesRepository } from './articles.repository';
 import { Types } from 'mongoose';
-import { log } from 'console';
+import type { IArticlesRepository } from './articles.repository.interface';
+import { ARTICLES_REPOSITORY } from './articles.repository.interface';
+import { IArticlesService } from './articles.service.interface';
 
 @Injectable()
-export class ArticlesService {
-  constructor(private readonly repo: ArticlesRepository) {}
+export class ArticlesService implements IArticlesService {
+  constructor(
+    @Inject(ARTICLES_REPOSITORY) private readonly repo: IArticlesRepository,
+  ) {}
 
   async create(title: string, content: string, userId: string) {
     const article = await this.repo.create({

@@ -8,13 +8,18 @@ import {
   Patch,
   Req,
   UseGuards,
+  Inject,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ArticlesService } from './articles.service';
+import { ARTICLES_SERVICE } from './articles.service.interface';
+import type { IArticlesService } from './articles.service.interface';
 
 @Controller('articles')
 export class ArticlesController {
-  constructor(private readonly articlesService: ArticlesService) {}
+  constructor(
+    @Inject(ARTICLES_SERVICE)
+    private readonly articlesService: IArticlesService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -38,6 +43,7 @@ export class ArticlesController {
     return await this.articlesService.findMyArticles(req.user.userId);
   }
   
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findArticleById(@Param('id') id: string) {
     return await this.articlesService.findOne(id);
